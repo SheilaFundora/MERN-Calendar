@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux';
 import {uiReducer} from "./uiReducers";
 import {calendarReducers} from "./calendarReducers";
+import {authReducer} from "./authReducer";
 
 
 //combinacion de todos los reducers, como tenemos varios reducers y al estar solo se le puede pasar uno,
@@ -8,7 +9,8 @@ import {calendarReducers} from "./calendarReducers";
 
 export const rootReducer = combineReducers({
     ui: uiReducer,
-    calendar: calendarReducers
+    calendar: calendarReducers,
+    auth: authReducer
 
 })
 
