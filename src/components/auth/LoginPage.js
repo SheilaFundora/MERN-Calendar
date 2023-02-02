@@ -12,7 +12,7 @@ const LoginPage = () => {
 
 
     const [ formLoginValues, handleInputChange ] = useForm({
-        lEmail: 'shey@gamil.com',
+        lEmail: 'sheilafundora04@gmail.com',
         lPassword: 'asdasd'
     });
 

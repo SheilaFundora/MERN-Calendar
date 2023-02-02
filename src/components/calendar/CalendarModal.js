@@ -5,8 +5,7 @@ import DateTimePicker from 'react-datetime-picker';
 import {useDispatch, useSelector} from "react-redux";
 
 import {uiCloseModal} from "../../actions/ui";
-import {eventAddNew, eventClearactiveEvents, eventUpdated} from "../../actions/events";
-import {DeleteEventFab} from "../ui/DeleteEventFab";
+import {eventClearactiveEvents, eventStartAddNew, eventStartUpdate} from "../../actions/events";
 
 const customStyles = {
     content: {
@@ -27,14 +26,14 @@ const nowPlus1 = now.clone().add(1, 'hours');
 const initEvent = {
     title: '',
     notes: '',
-    start: now.toDate(),
-    end: nowPlus1.toDate()
+    date_start: now.toDate(),
+    date_end: nowPlus1.toDate()
 }
 
 const CalendarModal = () => {
 
     const [formValues, setFormValues] = useState(initEvent);
-    const {note, title, start, end} = formValues;
+    const {note, title, date_start, date_end} = formValues;
     const [ dateStart, setDateStart ] = useState( now.toDate() );
     const [ dateEnd, setDateEnd ] = useState( nowPlus1.toDate() );
     const [ titleValid, setTitleValid ] = useState(true);
@@ -69,7 +68,7 @@ const CalendarModal = () => {
         setDateStart( e );
         setFormValues({
             ...formValues,
-            start: e
+            date_start: e
         })
     }
 
@@ -77,15 +76,15 @@ const CalendarModal = () => {
         setDateEnd( e );
         setFormValues({
             ...formValues,
-            end: e
+            date_end: e
         })
     }
 
     const handleSubmitForm = (e) => {
         e.preventDefault();
 
-        const momentStart = moment( start );
-        const momentEnd = moment( end );
+        const momentStart = moment( date_start );
+        const momentEnd = moment( date_end );
 
         if ( momentStart.isSameOrAfter( momentEnd ) ) { //si la fecha d inicio es igual o esta despues d la final
             // return Swal.fire('Error','La fecha fin debe de ser mayor a la fecha de inicio', 'error');
@@ -95,17 +94,9 @@ const CalendarModal = () => {
         }
 
         if ( activeEvents ) {
-            dispatch( eventUpdated( formValues ) )
+            dispatch( eventStartUpdate( formValues ) )
         } else {
-            console.log(activeEvents);
-            dispatch( eventAddNew({
-                ...formValues,
-                id: new Date().getTime(),
-                user: {
-                    _id: '123',
-                    name: 'Sheial'
-                }
-            }) );
+            dispatch( eventStartAddNew(formValues) );
         }
 
 

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import moment from 'moment';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
@@ -9,7 +9,7 @@ import CalendarEvent from "./CalendarEvent";
 import CalendarModal from "./CalendarModal";
 import {useDispatch, useSelector} from "react-redux";
 import {uiOpenModal} from "../../actions/ui";
-import {eventClearactiveEvents, eventSetActive} from "../../actions/events";
+import {eventClearactiveEvents, eventSetActive, eventStartLoading} from "../../actions/events";
 import {AddNewFab} from "../ui/AddNewFab";
 import {DeleteEventFab} from "../ui/DeleteEventFab";
 
@@ -23,6 +23,13 @@ const CalendarPage = () => {
     const [lastView, setLastView] = useState( localStorage.getItem('lastView') || 'month' );
     const dispatch = useDispatch();
     const {events, activeEvents} = useSelector(state => state.calendar) //asi m quedo con lo q esta el store del calendar
+    const { uid } = useSelector( state => state.auth );
+
+    useEffect(() => {
+
+        dispatch( eventStartLoading() );
+
+    }, [ dispatch ])
 
     //eventos para seleccionar, doble click
     const onDoubleClick = (e) => {
@@ -44,9 +51,10 @@ const CalendarPage = () => {
     }
 
     //style of events
-    const eventStyleGetter = ( event, start, end, isSelected ) => {
+    const eventStyleGetter = ( event, date_start, date_end, isSelected ) => {
         const style = {
-            backgroundColor: '#367CF7',
+            //para q si no es tu evento salga d otro color
+            backgroundColor: ( uid === event.user._id ) ? '#367CF7' : '#465660',
             borderRadius: '0px',
             opacity: 0.8,
             display: 'block',
@@ -66,8 +74,8 @@ const CalendarPage = () => {
             <Calendar
                 localizer={ localizer }
                 events={ events }
-                startAccessor="start"
-                endAccessor="end"
+                startAccessor="date_start"
+                endAccessor="date_end"
                 messages = { messages } //para cambiar el idioma de lo que esta ahi a espannol
                 eventPropGetter={ eventStyleGetter }
                 onSelectSlot={ onSelectSlot }

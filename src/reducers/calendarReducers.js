@@ -4,17 +4,7 @@ import {types} from "../types/types";
 
 const initialState = {
     //los eventos de calendario
-    events: [{
-        id: new Date().getTime(),
-        title: 'cumpleannos del jefe',
-        start: moment().toDate(),
-        end: moment().add(2,'hours').toDate(),
-        bg: '#fafafa',
-        user: {
-            _id: '123',
-            name: 'Sheila'
-        }
-    }],
+    events: [],
     //el evento activo, objeto con todos los datos del evento activo
     activeEvents: null
 }
@@ -59,6 +49,15 @@ export const calendarReducers = ( state = initialState, action ) => {
                     e => ( e.id !== state.activeEvents.id )
                 ),
                 activeEvents: null
+            }
+        case types.eventLoaded:
+            return {
+                ...state,
+                events: [ ...action.payload ]
+            }
+        case types.eventLogout:
+            return {
+                ...initialState
             }
 
         default:
